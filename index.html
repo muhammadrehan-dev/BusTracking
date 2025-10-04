@@ -3,24 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bus Tracker</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Bus Tracker - Live</title>
     
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="script.js"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Waiting Screen (shown when bus not started) -->
-    <div id="waitingScreen" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; display: flex; align-items: center; justify-content: center; color: white; text-align: center; flex-direction: column;">
-        <div style="font-size: 48px; margin-bottom: 20px;">🚌</div>
-        <h2 style="font-size: 24px; margin-bottom: 10px;">Bus Not Started Yet</h2>
-        <p style="opacity: 0.8;">Waiting for driver to start the route...</p>
-        <div style="margin-top: 20px; font-size: 14px; opacity: 0.6;">This screen will update automatically</div>
-    </div>
     <!-- Header -->
     <header class="header">
         <div class="header-content">
@@ -42,16 +32,16 @@
     <div class="stops-info">
         <div class="stop-card previous">
             <p class="stop-label">Previous Stop</p>
-            <h3 class="stop-name" id="prevStop">4K Chowrangi</h3>
-            <p class="stop-time">Departed 2 min ago</p>
+            <h3 class="stop-name" id="prevStop">---</h3>
+            <p class="stop-time" id="prevTime">---</p>
         </div>
         <div class="stop-divider">
             <div class="arrow">→</div>
         </div>
         <div class="stop-card next">
             <p class="stop-label">Next Stop</p>
-            <h3 class="stop-name" id="nextStop">Power House Chowrangi</h3>
-            <p class="stop-time" id="etaDisplay">ETA: 3 min</p>
+            <h3 class="stop-name" id="nextStop">---</h3>
+            <p class="stop-time" id="etaDisplay">---</p>
         </div>
     </div>
 
@@ -59,12 +49,12 @@
     <div class="stats-container">
         <div class="stat-card">
             <p class="stat-label">Current Speed</p>
-            <h2 class="stat-value" id="speedDisplay">42</h2>
+            <h2 class="stat-value" id="speedDisplay">0</h2>
             <p class="stat-unit">km/h</p>
         </div>
         <div class="stat-card highlight">
             <p class="stat-label">Time to Next Stop</p>
-            <h2 class="stat-value" id="timeDisplay">3</h2>
+            <h2 class="stat-value" id="timeDisplay">--</h2>
             <p class="stat-unit">minutes</p>
         </div>
     </div>
@@ -73,13 +63,13 @@
     <div class="route-progress">
         <h3 class="section-title">Route Progress</h3>
         <div class="progress-line">
-            <div class="stop-point completed" data-stop="0">
+            <div class="stop-point" data-stop="0">
                 <div class="stop-dot"></div>
                 <p class="stop-label-progress">4K Chowrangi</p>
             </div>
-            <div class="progress-connector completed"></div>
+            <div class="progress-connector"></div>
             
-            <div class="stop-point active" data-stop="1">
+            <div class="stop-point" data-stop="1">
                 <div class="stop-dot"></div>
                 <p class="stop-label-progress">Power House</p>
             </div>
@@ -140,6 +130,12 @@
         </div>
     </div>
 
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- Firebase JS SDK -->
+    <script type="module" src="script.js" >
 
+    </script>
 </body>
 </html>
