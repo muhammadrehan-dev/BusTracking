@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Driver - Location Tracker</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+        }
+
+        /* Login Screen */
+        #loginScreen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .login-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn-login:active {
+            transform: scale(0.98);
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            font-size: 14px;
+        }
+
+        /* Driver App Screen */
+        #driverScreen {
+            display: none;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #FF5722 0%, #E64A19 100%);
+            color: white;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .header-left p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .btn-logout {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-logout:active {
+            background: rgba(255,255,255,0.3);
+        }
+
+        #map {
+            width: 100%;
+            height: 50vh;
+            min-height: 300px;
+        }
+
+        .controls {
+            padding: 20px;
+            background: white;
+            margin: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .status {
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .status.inactive {
+            background: #FFF3E0;
+            color: #E65100;
+        }
+
+        .status.active {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 18px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 10px;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-start:active {
+            transform: scale(0.98);
+        }
+
+        .btn-stop {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.4);
+        }
+
+        .btn-stop:active {
+            transform: scale(0.98);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .info-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .info-unit {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .location-status {
+            text-align: center;
+            padding: 10px;
+            margin-top: 15px;
+            background: #E3F2FD;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #1976D2;
+        }
+
+        .pulse-dot {
+            width: 10px;
+            height: 10px;
+            background: #4CAF50;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(1.3);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen">
+        <div class="login-card">
+            <div class="login-header">
+                <h1>🚌</h1>
+                <h1>Driver Login</h1>
+                <p>Enter your credentials to start tracking</p>
+            </div>
+
+            <div class="error-message" id="errorMessage">
+                Invalid username or password
+            </div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="username" placeholder="Enter username" required autocomplete="username">
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="password" placeholder="Enter password" required autocomplete="current-password">
+                </div>
+
+                <button type="submit" class="btn-login">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Driver Screen (Hidden until login) -->
+    <div id="driverScreen">
+        <div class="header">
+            <div class="header-left">
+                <h1>🚌 Bus Driver App</h1>
+                <p>Location Tracking System</p>
+            </div>
+            <button class="btn-logout" onclick="handleLogout()">Logout</button>
+        </div>
+
+        <div id="map"></div>
+
+        <div class="controls">
+            <div class="status inactive" id="status">
+                📍 Route Not Started
+            </div>
+
+            <button class="btn btn-start" id="startBtn" onclick="startRoute()">
+                ▶️ Start Route
+            </button>
+            <button class="btn btn-stop" id="stopBtn" onclick="stopRoute()" style="display: none;">
+                ⏹️ Stop Route
+            </button>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-label">Current Speed</div>
+                    <div class="info-value" id="speedValue">0</div>
+                    <div class="info-unit">km/h</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">Updates Sent</div>
+                    <div class="info-value" id="updateCount">0</div>
+                    <div class="info-unit">total</div>
+                </div>
+            </div>
+
+            <div class="location-status" id="locationStatus">
+                Waiting for location permission...
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- Firebase JS SDK (v9 - modular) -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getDatabase, ref, set } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyA2_R8fnWilxYeak1rIXpd2OH-44NZ7P7o",
+            authDomain: "bus-driver-duet.firebaseapp.com",
+            databaseURL: "https://bus-driver-duet-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "bus-driver-duet",
+            storageBucket: "bus-driver-duet.firebasestorage.app",
+            messagingSenderId: "412883985841",
+            appId: "1:412883985841:web:99cf2eafe70b4dab864990"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        // Credentials (stored in Firebase later for better security)
+        const VALID_USERNAME = 'driver';
+        const VALID_PASSWORD = 'driver123';
+
+        // Global variables
+        let map;
+        let driverMarker;
+        let watchId = null;
+        let isTracking = false;
+        let updateCount = 0;
+        let lastPosition = null;
+        let lastTimestamp = null;
+        let isLoggedIn = false;
+
+        // Check if already logged in
+        if (sessionStorage.getItem('driverLoggedIn') === 'true') {
+            showDriverScreen();
+        }
+
+        // Handle login
+        window.handleLogin = function(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username === VALID_USERNAME && password === VALID_PASSWORD) {
+                // Login successful
+                sessionStorage.setItem('driverLoggedIn', 'true');
+                showDriverScreen();
+            } else {
+                // Login failed
+                document.getElementById('errorMessage').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('errorMessage').style.display = 'none';
+                }, 3000);
+            }
+        };
+
+        // Show driver screen after login
+        function showDriverScreen() {
+            isLoggedIn = true;
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('driverScreen').style.display = 'block';
+            initMap();
+        }
+
+        // Handle logout
+        window.handleLogout = function() {
+            if (isTracking) {
+                stopRoute();
+            }
+            sessionStorage.removeItem('driverLoggedIn');
+            isLoggedIn = false;
+            document.getElementById('driverScreen').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        };
+
+        // Initialize map
+        function initMap() {
+            // Default center (Karachi)
+            map = L.map('map').setView([24.8607, 67.0011], 13);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Create driver marker
+            const driverIcon = L.divIcon({
+                className: 'driver-marker',
+                html: `
+                    <div style="
+                        width: 50px;
+                        height: 50px;
+                        background: #FF5722;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 24px;
+                        box-shadow: 0 0 0 10px rgba(255, 87, 34, 0.3);
+                        border: 4px solid white;
+                    ">🚌</div>
+                `,
+                iconSize: [50, 50],
+                iconAnchor: [25, 25]
+            });
+
+            driverMarker = L.marker([24.8607, 67.0011], { icon: driverIcon }).addTo(map);
+
+            // Try to get current location immediately
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        driverMarker.setLatLng([lat, lng]);
+                        map.setView([lat, lng], 15);
+                        document.getElementById('locationStatus').innerHTML = `📍 Location: ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+                    },
+                    (error) => {
+                        document.getElementById('locationStatus').textContent = '⚠️ Please allow location access';
+                    }
+                );
+            }
+        }
+
+        // Calculate speed between two positions
+        function calculateSpeed(lat1, lng1, lat2, lng2, timeDiff) {
+            const R = 6371; // Earth's radius in km
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLng = (lng2 - lng1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                     Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                     Math.sin(dLng/2) * Math.sin(dLng/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            const distance = R * c; // km
+            const hours = timeDiff / 3600000; // Convert ms to hours
+            return hours > 0 ? Math.round(distance / hours) : 0;
+        }
+
+        // Start tracking
+        window.startRoute = function() {
+            if (!isLoggedIn) return;
+
+            if (!navigator.geolocation) {
+                alert('Geolocation is not supported by your browser');
+                return;
+            }
+
+            isTracking = true;
+            document.getElementById('startBtn').style.display = 'none';
+            document.getElementById('stopBtn').style.display = 'block';
+            document.getElementById('status').className = 'status active';
+            document.getElementById('status').innerHTML = '<span class="pulse-dot"></span>Route Active - Tracking Location';
+
+            // Watch position with high accuracy
+            watchId = navigator.geolocation.watchPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    const timestamp = Date.now();
+                    
+                    // Calculate speed
+                    let speed = 0;
+                    if (lastPosition && lastTimestamp) {
+                        const timeDiff = timestamp - lastTimestamp;
+                        speed = calculateSpeed(lastPosition.lat, lastPosition.lng, lat, lng, timeDiff);
+                    }
+                    
+                    lastPosition = { lat, lng };
+                    lastTimestamp = timestamp;
+
+                    // Update map
+                    driverMarker.setLatLng([lat, lng]);
+                    map.setView([lat, lng], 16);
+
+                    // Update UI
+                    document.getElementById('speedValue').textContent = speed;
+                    document.getElementById('locationStatus').innerHTML = `
+                        <span class="pulse-dot"></span>
+                        Location: ${lat.toFixed(6)}, ${lng.toFixed(6)}
+                    `;
+
+                    // Send to Firebase
+                    const locationData = {
+                        latitude: lat,
+                        longitude: lng,
+                        speed: speed,
+                        timestamp: timestamp,
+                        isActive: true
+                    };
+
+                    set(ref(database, 'busLocation'), locationData)
+                        .then(() => {
+                            updateCount++;
+                            document.getElementById('updateCount').textContent = updateCount;
+                        })
+                        .catch((error) => {
+                            console.error('Error sending data:', error);
+                        });
+                },
+                (error) => {
+                    console.error('Geolocation error:', error);
+                    document.getElementById('locationStatus').textContent = '❌ Error getting location: ' + error.message;
+                },
+                {
+                    enableHighAccuracy: true,
+                    maximumAge: 0,
+                    timeout: 5000
+                }
+            );
+        };
+
+        // Stop tracking
+        window.stopRoute = function() {
+            if (watchId) {
+                navigator.geolocation.clearWatch(watchId);
+                watchId = null;
+            }
+
+            isTracking = false;
+            document.getElementById('startBtn').style.display = 'block';
+            document.getElementById('stopBtn').style.display = 'none';
+            document.getElementById('status').className = 'status inactive';
+            document.getElementById('status').textContent = '📍 Route Stopped';
+
+            // Update Firebase
+            set(ref(database, 'busLocation/isActive'), false);
+
+            document.getElementById('locationStatus').textContent = 'Location tracking stopped';
+        };
+    </script>
+</body>
+</html>
