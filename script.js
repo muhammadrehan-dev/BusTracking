@@ -17,10 +17,10 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
 // Bus stops data
-const stops = [
+const stops = [ 
     { name: "4K Chowrangi", lat: 25.005963, lng: 67.064562 },
     { name: "Power House Chowrangi", lat: 24.985976, lng: 67.065940 },
-    { name: "Up Morr Station", lat: 24.973632, lng: 67.066827 },
+    { name: "Up Morr Station", lat: 24.973172, lng: 67.066583 },
     { name: "Nagan Chowrangi", lat: 24.964322, lng: 67.066866 },
     { name: "Sakhi Hassan", lat: 24.953785, lng: 67.058106 },
     { name: "People's Chowrangi", lat: 24.948024, lng: 67.065709 },
