@@ -13,22 +13,210 @@ body {
 
 /* Header */
 .header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 20px;
+    background: white;
+    color: #333;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-.header-content h1 {
-    font-size: 24px;
+.header-top {
+    padding: 20px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.university-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo-container {
+    flex-shrink: 0;
+}
+
+.university-logo {
+    width: 100px;
+
+}
+
+.university-text {
+    flex: 1;
+}
+
+.university-name {
+    font-size: 22px;
+    font-weight: 700;
     margin-bottom: 5px;
+    line-height: 1.2;
+    color: #1a1a1a;
 }
 
-.route-info {
-    font-size: 14px;
-    opacity: 0.9;
+.university-tagline {
+    font-size: 13px;
+    color: #666;
+    font-weight: 400;
 }
 
+.header-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+}
+
+.route-section {
+    flex: 1;
+    min-width: 250px;
+}
+
+.route-badge {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #f8f9fa;
+    padding: 12px 18px;
+    border-radius: 12px;
+    border: 2px solid #e0e0e0;
+}
+
+.route-details {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.route-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #667eea;
+}
+
+.route-path {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+.driver-section {
+    flex: 1;
+    min-width: 250px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.driver-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #f8f9fa;
+    padding: 12px 18px;
+    border-radius: 12px;
+    border: 2px solid #e0e0e0;
+}
+
+.driver-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.driver-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #667eea;
+}
+
+.driver-name {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 2px;
+    color: #1a1a1a;
+}
+
+.driver-phone {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    padding: 4px 0;
+}
+
+.driver-phone:hover {
+    color: #764ba2;
+    transform: translateX(2px);
+}
+
+.driver-phone:active {
+    transform: scale(0.98);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header-top {
+        padding: 15px;
+    }
+    
+    .university-logo {
+        width: 55px;
+        height: 55px;
+    }
+    
+    .university-name {
+        font-size: 16px;
+    }
+    
+    .university-tagline {
+        font-size: 11px;
+    }
+    
+    .header-bottom {
+        flex-direction: column;
+        padding: 12px 15px;
+        gap: 12px;
+    }
+    
+    .route-section,
+    .driver-section {
+        width: 100%;
+        min-width: auto;
+    }
+    
+    .driver-section {
+        justify-content: flex-start;
+    }
+    
+    .route-badge,
+    .driver-card {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .university-name {
+        font-size: 14px;
+    }
+    
+    .route-path {
+        font-size: 13px;
+    }
+    
+    .driver-name {
+        font-size: 14px;
+    }
+}
 /* Map Container */
 .map-container {
     position: relative;
