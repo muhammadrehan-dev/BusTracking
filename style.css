@@ -377,3 +377,72 @@ body {
 .progress-connector.completed {
     background: #4CAF50;
 }
+
+.footer {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    margin-top: 30px;
+    text-align: center;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.made-with {
+    font-size: 16px;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.emoji {
+    display: inline-block;
+    animation: pulse-emoji 2s ease-in-out infinite;
+    font-size: 18px;
+}
+
+.emoji:first-of-type {
+    animation-delay: 0s;
+}
+
+.emoji:last-of-type {
+    animation-delay: 1s;
+}
+
+@keyframes pulse-emoji {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+.copyright {
+    font-size: 14px;
+    opacity: 0.9;
+    font-weight: 400;
+}
+
+.copyright-symbol {
+    font-weight: bold;
+    margin-right: 2px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .footer {
+        padding: 15px;
+    }
+    
+    .made-with {
+        font-size: 14px;
+    }
+    
+    .copyright {
+        font-size: 12px;
+    }
+}
