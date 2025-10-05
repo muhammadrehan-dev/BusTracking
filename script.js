@@ -25,7 +25,7 @@ const stops = [
     { name: "Sakhi Hassan", lat: 24.953785, lng: 67.058106 },
     { name: "People's Chowrangi", lat: 24.948024, lng: 67.065709 },
     { name: "Water Pump", lat: 24.936103, lng: 67.075335 },
-    { name: "Aisha Manzil", lat: 24.926938, lng: 67.063899 },
+    { name: "Aisha Manzil", lat: 24.927261, lng: 67.064343 },
     { name: "Teen Hatti", lat: 24.891752, lng: 67.043509 },
     { name: "Guru Mandir", lat: 24.880976, lng: 67.039385 },
     { name: "Dawood University", lat: 24.879408, lng: 67.047696 }
